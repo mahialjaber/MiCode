@@ -86,3 +86,19 @@ Run the tests (Node.js 18+): `node --test tests/decoder.test.js`
 ## 📄 License
 
 [MIT](LICENSE) © [Mahi Al Jaber](https://github.com/mahialjaber)
+
+## ⭐ Support This Project
+
+If this tool helped with your studies, certifications, or lab setup:
+
+- ⭐ **Star this repository** so it reaches other analysts who need it
+- 👤 **Follow [@mahialjaber](https://github.com/mahialjaber)** for future defensive security projects and SOC tooling
+- 🍴 **Fork it and share what you build**
+
+Building resources like this for the community takes time — every star genuinely helps it reach the next analyst who needs it.
+
+---
+
+<p align="center">
+  Built for the blue team. 🛡️
+</p>
