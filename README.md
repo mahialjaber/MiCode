@@ -23,7 +23,7 @@
 
 ---
 
-## 🤔 What is MiCode?
+## What is MiCode?
 
 Attackers often hide PowerShell commands with Base64 (`powershell -enc SQBFAFgA...`). **MiCode** turns them back into readable text in one click — a lightweight alternative to CyberChef for everyday investigations.
 
@@ -33,7 +33,7 @@ Output:  IEX ('hello')
 Detected: PowerShell -enc argument → Base64 (26 bytes) → UTF-16LE
 ```
 
-## ✨ Features
+## Features
 
 | Feature | What it does |
 |---|---|
@@ -51,7 +51,7 @@ Detected: PowerShell -enc argument → Base64 (26 bytes) → UTF-16LE
 - **Nothing is executed** — decoded output is always displayed as plain text.
 - **Works offline** — cached after your first visit.
 
-## 🚀 How to Use
+## How to Use
 
 1. Open **[mahialjaber.github.io/MiCode](https://mahialjaber.github.io/MiCode/)**
 2. Paste the encoded text or PowerShell command.
@@ -71,7 +71,7 @@ MiCode/
 └── tests/            # Decoder tests (Node.js)
 ```
 
-## 💻 Run Locally
+## Run Locally
 
 No build step needed — just serve the folder:
 
