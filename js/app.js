@@ -110,6 +110,178 @@
     }
   });
 
+  /* ------------------------------------------------------------------ */
+  /* Hanging Light Switch Pull Cord & Theme Management                  */
+  /* ------------------------------------------------------------------ */
+  function initThemeAndPullCord() {
+    const fixture = document.getElementById("theme-cord-container");
+    const area = document.getElementById("cord-interactive-area");
+    const stem = document.getElementById("rope-stem");
+    const handle = document.getElementById("cord-handle");
+    const bulb = document.getElementById("bulb-indicator");
+    const tooltip = document.getElementById("cord-tooltip");
+    const cue = document.getElementById("pull-cue");
+
+    // Default to dark theme or saved preference
+    let currentTheme = 'dark';
+    try {
+      const saved = localStorage.getItem("micode-theme");
+      if (saved) currentTheme = saved;
+    } catch (e) {}
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      try {
+        localStorage.setItem("micode-theme", theme);
+      } catch (e) {}
+
+      const isDark = theme === "dark";
+      if (bulb) {
+        bulb.className = isDark ? "cord-indicator-bulb bulb-off" : "cord-indicator-bulb bulb-lit";
+      }
+      if (tooltip) {
+        tooltip.textContent = isDark ? "Pull for Lights ON (Light Mode)" : "Pull for Lights OFF (Dark Mode)";
+      }
+    }
+
+    applyTheme(currentTheme);
+
+    if (!fixture || !area || !stem || !handle) return;
+
+    const BASE_HEIGHT = 32;
+    const MAX_PULL = 36;
+    const PULL_THRESHOLD = 18;
+
+    let isDragging = false;
+    let startY = 0;
+    let currentStretch = 0;
+    let dragStartTime = 0;
+
+    function playTactileClick() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(160, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(50, ctx.currentTime + 0.05);
+
+        gain.gain.setValueAtTime(0.18, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start();
+        osc.stop(ctx.currentTime + 0.05);
+      } catch (e) {
+        // audio disabled or blocked
+      }
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute("data-theme") || "dark";
+      const newTheme = current === "light" ? "dark" : "light";
+      applyTheme(newTheme);
+    }
+
+    function snapBack(shouldToggle, finalStretch) {
+      fixture.classList.remove("cord-snapping");
+      const releaseHeight = BASE_HEIGHT + finalStretch;
+      stem.style.setProperty("--release-height", releaseHeight + "px");
+      handle.style.setProperty("--release-y", finalStretch + "px");
+
+      stem.style.height = "";
+      handle.style.transform = "";
+
+      void fixture.offsetWidth; // force reflow
+      fixture.classList.add("cord-snapping");
+
+      if (shouldToggle) {
+        toggleTheme();
+        playTactileClick();
+      }
+
+      if (cue) {
+        cue.style.background = "transparent";
+        cue.style.boxShadow = "none";
+      }
+
+      setTimeout(function () {
+        fixture.classList.remove("cord-snapping");
+        stem.style.height = BASE_HEIGHT + "px";
+        handle.style.transform = "translateY(0px)";
+      }, 550);
+    }
+
+    area.addEventListener("pointerdown", function (e) {
+      isDragging = true;
+      startY = e.clientY;
+      currentStretch = 0;
+      dragStartTime = Date.now();
+      fixture.classList.remove("cord-snapping");
+      try { area.setPointerCapture(e.pointerId); } catch (err) {}
+    });
+
+    area.addEventListener("pointermove", function (e) {
+      if (!isDragging) return;
+      const rawDeltaY = e.clientY - startY;
+      if (rawDeltaY > 0) {
+        currentStretch = Math.min(MAX_PULL, Math.pow(rawDeltaY, 0.85) * 1.3);
+      } else {
+        currentStretch = 0;
+      }
+      stem.style.height = (BASE_HEIGHT + currentStretch) + "px";
+      handle.style.transform = "translateY(" + currentStretch + "px)";
+
+      if (cue) {
+        if (currentStretch >= PULL_THRESHOLD) {
+          cue.style.background = "#fbbf24";
+          cue.style.boxShadow = "0 0 8px #fbbf24";
+        } else {
+          cue.style.background = "transparent";
+          cue.style.boxShadow = "none";
+        }
+      }
+    });
+
+    function finishPull(e) {
+      if (!isDragging) return;
+      isDragging = false;
+      try { area.releasePointerCapture(e.pointerId); } catch (err) {}
+
+      const duration = Date.now() - dragStartTime;
+      const finalStretch = currentStretch;
+      const isQuickTap = duration < 240 && finalStretch < 8;
+
+      if (finalStretch >= PULL_THRESHOLD || isQuickTap) {
+        snapBack(true, isQuickTap ? 24 : finalStretch);
+      } else {
+        snapBack(false, finalStretch);
+      }
+    }
+
+    area.addEventListener("pointerup", finishPull);
+    area.addEventListener("pointercancel", function (e) {
+      if (!isDragging) return;
+      isDragging = false;
+      try { area.releasePointerCapture(e.pointerId); } catch (err) {}
+      snapBack(false, currentStretch);
+    });
+
+    fixture.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        snapBack(true, 24);
+      }
+    });
+  }
+
+  initThemeAndPullCord();
+
   // Offline support: cache the app files after the first visit.
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', function () {

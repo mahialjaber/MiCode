@@ -1,5 +1,23 @@
 :root {
   color-scheme: light dark;
+  --bg: #0f1216;
+  --surface: #171b21;
+  --text: #e3e7ec;
+  --muted: #9aa4b1;
+  --border: #2f3640;
+  --accent: #4c8dff;
+  --accent-text: #0b0d10;
+  --ok-bg: #12261a;
+  --ok-border: #2f6b43;
+  --warn-bg: #2b2310;
+  --warn-border: #7a6224;
+  --err-bg: #2d1414;
+  --err-border: #7d3434;
+  --mono: ui-monospace, "Cascadia Mono", Consolas, "SFMono-Regular", Menlo, monospace;
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
   --bg: #f6f7f9;
   --surface: #ffffff;
   --text: #1c2128;
@@ -13,25 +31,23 @@
   --warn-border: #e8c260;
   --err-bg: #fdecec;
   --err-border: #ef9a9a;
-  --mono: ui-monospace, "Cascadia Mono", Consolas, "SFMono-Regular", Menlo, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #0f1216;
-    --surface: #171b21;
-    --text: #e3e7ec;
-    --muted: #9aa4b1;
-    --border: #2f3640;
-    --accent: #4c8dff;
-    --accent-text: #0b0d10;
-    --ok-bg: #12261a;
-    --ok-border: #2f6b43;
-    --warn-bg: #2b2310;
-    --warn-border: #7a6224;
-    --err-bg: #2d1414;
-    --err-border: #7d3434;
-  }
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f1216;
+  --surface: #171b21;
+  --text: #e3e7ec;
+  --muted: #9aa4b1;
+  --border: #2f3640;
+  --accent: #4c8dff;
+  --accent-text: #0b0d10;
+  --ok-bg: #12261a;
+  --ok-border: #2f6b43;
+  --warn-bg: #2b2310;
+  --warn-border: #7a6224;
+  --err-bg: #2d1414;
+  --err-border: #7d3434;
 }
 
 * { box-sizing: border-box; }
@@ -41,6 +57,11 @@ body {
   background: var(--bg);
   color: var(--text);
   font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.panel, textarea, button {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
 
 .container {
@@ -49,7 +70,13 @@ body {
   padding: 24px 16px 40px;
 }
 
-.header { margin-bottom: 16px; }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  position: relative;
+}
 
 .header h1 {
   display: flex;
@@ -61,6 +88,184 @@ body {
 }
 
 .tagline { margin: 2px 0 0; color: var(--muted); }
+
+/* Pull Cord Lamp Switch Toggle */
+.cord-fixture {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+  touch-action: none;
+  margin-top: -24px;
+  padding: 0 8px;
+  z-index: 25;
+}
+.cord-fixture:active { cursor: grabbing; }
+
+.cord-anchor-plate {
+  width: 18px;
+  height: 9px;
+  border-radius: 0 0 3px 3px;
+  background: linear-gradient(180deg, #475569 0%, #1e293b 100%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-top: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  position: relative;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cord-indicator-bulb {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+.bulb-lit {
+  background-color: #fbbf24;
+  box-shadow: 0 0 8px #f59e0b, 0 0 16px #fbbf24;
+}
+.bulb-off {
+  background-color: #38bdf8;
+  box-shadow: 0 0 5px #0284c7;
+}
+
+.cord-interactive-area {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 12px;
+  outline: none;
+}
+
+.rope-stem {
+  width: 2.5px;
+  height: 32px;
+  background: linear-gradient(180deg, #94a3b8 0%, #cbd5e1 50%, #fde68a 100%);
+  transform-origin: top center;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+.rope-stem::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.4;
+  background: repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 1px, transparent 3px);
+}
+
+.cord-handle {
+  position: relative;
+  margin-top: -1px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: filter 0.15s ease;
+}
+.cord-handle:hover { filter: brightness(1.15); }
+
+.cord-bead-top {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #f59e0b;
+  border: 1px solid #b45309;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.cord-bead-main {
+  width: 12px;
+  height: 18px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #d97706 0%, #fef08a 40%, #b45309 100%);
+  border: 1px solid #92400e;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -1px;
+}
+.cord-bead-inner {
+  width: 4px;
+  height: 9px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.6);
+}
+.cord-bead-cap {
+  width: 6px;
+  height: 4px;
+  border-radius: 0 0 3px 3px;
+  background: #78350f;
+  margin-top: -1px;
+}
+
+.pull-cue {
+  position: absolute;
+  bottom: -8px;
+  width: 16px;
+  height: 2px;
+  border-radius: 2px;
+  background: transparent;
+  transition: all 0.2s ease;
+  pointer-events: none;
+}
+
+.cord-tooltip {
+  pointer-events: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 10px;
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  background: #0f172a;
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translateY(-4px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 50;
+}
+.cord-fixture:hover .cord-tooltip,
+.cord-fixture:focus-visible .cord-tooltip {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes cordReleaseSnap {
+  0% { height: var(--release-height, 58px); }
+  30% { height: 25px; }
+  55% { height: 36px; }
+  75% { height: 30px; }
+  90% { height: 33px; }
+  100% { height: 32px; }
+}
+@keyframes handleReleaseSnap {
+  0% { transform: translateY(var(--release-y, 26px)); }
+  30% { transform: translateY(-7px); }
+  55% { transform: translateY(4px); }
+  75% { transform: translateY(-2px); }
+  90% { transform: translateY(1px); }
+  100% { transform: translateY(0); }
+}
+
+.cord-snapping .rope-stem {
+  animation: cordReleaseSnap 0.55s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+}
+.cord-snapping .cord-handle {
+  animation: handleReleaseSnap 0.55s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+}
 
 .panel {
   background: var(--surface);

@@ -15,8 +15,29 @@
 <body>
   <main class="container">
     <header class="header">
-      <h1><img src="icon.svg" alt="" width="28" height="28"> MiCode</h1>
-      <p class="tagline">Offline PowerShell &amp; Base64 decoder</p>
+      <div class="header-title">
+        <h1><img src="icon.svg" alt="" width="28" height="28"> MiCode</h1>
+        <p class="tagline">Offline PowerShell &amp; Base64 decoder</p>
+      </div>
+
+      <!-- Hanging Light Switch Pull Cord -->
+      <div class="cord-fixture" id="theme-cord-container" role="button" tabindex="0" aria-label="Pull cord to toggle light mode" title="Pull cord down or click to toggle lights">
+        <div class="cord-anchor-plate">
+          <span id="bulb-indicator" class="cord-indicator-bulb bulb-off" title="Lighting Status"></span>
+        </div>
+        <div id="cord-interactive-area" class="cord-interactive-area">
+          <div id="rope-stem" class="rope-stem"></div>
+          <div id="cord-handle" class="cord-handle">
+            <div class="cord-bead-top"></div>
+            <div class="cord-bead-main">
+              <div class="cord-bead-inner"></div>
+            </div>
+            <div class="cord-bead-cap"></div>
+          </div>
+          <div id="pull-cue" class="pull-cue"></div>
+          <span id="cord-tooltip" class="cord-tooltip">Pull cord for Lights</span>
+        </div>
+      </div>
     </header>
 
     <section class="panel">
