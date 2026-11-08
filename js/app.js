@@ -40,6 +40,13 @@
     }
     status.appendChild(title);
 
+    // On failure, show only the reason to keep the message clear.
+    if (!result.ok) {
+      addList([result.error]);
+      status.hidden = false;
+      return;
+    }
+
     if (result.steps.length > 0) {
       const steps = document.createElement('div');
       steps.className = 'steps';
@@ -48,7 +55,6 @@
     }
 
     const messages = [];
-    if (result.error) messages.push(result.error);
     result.warnings.forEach(function (w) { messages.push('Warning: ' + w); });
     result.notes.forEach(function (n) { messages.push(n); });
     if (messages.length > 0) addList(messages);
