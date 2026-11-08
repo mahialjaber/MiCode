@@ -1,83 +1,88 @@
-# MiCode
+<p align="center">
+  <img src="assets/banner.jpg" alt="MiCode banner" width="100%">
+</p>
 
-**A tiny, offline PowerShell & Base64 decoder for everyday SOC work.**
+<h1 align="center">🔓 MiCode</h1>
 
-🔗 **Live app:** https://mahialjaber.github.io/MiCode/
+<p align="center">
+  <b>A tiny, offline PowerShell &amp; Base64 decoder for security analysts.</b><br>
+  Paste a suspicious command → click <b>Decode</b> → read it safely as plain text.
+</p>
 
-MiCode is a simple alternative to CyberChef for the most common investigation task: decoding suspicious PowerShell `-EncodedCommand` strings and Base64 content. Paste, click **Decode**, read the result.
+<p align="center">
+  <a href="https://mahialjaber.github.io/MiCode/"><img src="https://img.shields.io/badge/LIVE%20DEMO-Open%20MiCode-1f6feb?style=for-the-badge" alt="Live demo"></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/HTML%20%2B%20CSS%20%2B%20JS-vanilla-f7df1e?style=flat-square" alt="Vanilla JS">
+  <img src="https://img.shields.io/badge/works-offline-2ea44f?style=flat-square" alt="Offline">
+  <img src="https://img.shields.io/badge/data%20uploaded-none-2ea44f?style=flat-square" alt="No uploads">
+  <img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="MIT license">
+  <a href="https://github.com/mahialjaber"><img src="https://img.shields.io/badge/author-Mahi%20Al%20Jaber-orange?style=flat-square&logo=github" alt="Author"></a>
+</p>
 
 ---
 
-## Features
+## 🤔 What is MiCode?
 
-- **Base64 and PowerShell decoding.** Paste raw Base64 or a full command line, e.g.
-  `powershell.exe -NoP -W Hidden -enc SQBFAFgA...`
-- **Finds the payload for you.** Recognises every short form of `-EncodedCommand` (`-e`, `-ec`, `-enc`, …), `/` and Unicode-dash prefixes, and `[Convert]::FromBase64String('...')`.
-- **Detects the text encoding automatically.** UTF-16LE (PowerShell's default), UTF-8/ASCII, UTF-16BE and Byte Order Marks.
-- **Decompresses common payloads.** Gzip, Zlib and raw Deflate (as used by PowerShell `GzipStream` / `DeflateStream`), using the browser's built-in decompression.
-- **Fixes minor input problems.** Extra spaces, line breaks, quotation marks, missing `=` padding and URL-safe Base64 (`-` `_`).
-- **Partial decoding with clear warnings.** If the input is truncated or corrupted, MiCode decodes as much as it can and tells you exactly what it changed and why the output may be incomplete. It never silently invents or alters content.
-- **Binary detection.** Non-text data (e.g. an `MZ` executable) is shown as a hex dump with a warning instead of garbled text.
-- **Copy and Clear** buttons. Press **Ctrl + Enter** to decode.
+Attackers often hide PowerShell commands with Base64 (`powershell -enc SQBFAFgA...`). **MiCode** turns them back into readable text in one click — a lightweight alternative to CyberChef for everyday investigations.
 
-## Privacy & safety
-
-- 100% client-side: HTML, CSS and vanilla JavaScript. No backend, no API, no analytics, no external libraries.
-- Your input is **never uploaded or transmitted**. A strict Content Security Policy (`connect-src 'none'`) blocks the page from sending data anywhere.
-- Decoded output is displayed as **plain text only** and is **never executed**.
-- Works **offline** after the first visit (cached by a service worker).
-
-## How to use
-
-1. Open https://mahialjaber.github.io/MiCode/ (once online; afterwards it also works offline).
-2. Paste the Base64 text or PowerShell command into **Input**.
-3. Click **Decode**.
-4. Read the status box:
-   - ✓ **green** – decoded cleanly.
-   - ⚠ **yellow** – decoded, but the output may be incomplete or inaccurate (reasons are listed).
-   - **red** – could not decode (reason is shown).
-5. Click **Copy** to copy the output, or **Clear** to start over.
-
-The status box also shows the detection chain, e.g.
-`Detected: PowerShell -enc argument → Base64 (64 bytes) → UTF-16LE`.
-
-> Invisible control characters in the output are displayed as `\xNN` (for example `\x00`) so nothing is hidden. This is always mentioned in the status box.
-
-## Project structure
-
+```text
+Input :  powershell.exe -NoP -W Hidden -enc SQBFAFgAIAAoACcAaABlAGwAbABvACcAKQA=
+Output:  IEX ('hello')
+Detected: PowerShell -enc argument → Base64 (26 bytes) → UTF-16LE
 ```
+
+## ✨ Features
+
+| | |
+|---|---|
+| 🔍 **Smart input** | Paste raw Base64 or a full command line — finds `-e`, `-enc`, `-EncodedCommand`, `FromBase64String('…')` |
+| 🔤 **Auto-detects encoding** | UTF-16LE (PowerShell default), UTF-8 / ASCII, UTF-16BE |
+| 🗜️ **Decompresses payloads** | Gzip, Zlib and raw Deflate (PowerShell `GzipStream` / `DeflateStream`) |
+| 🧹 **Fixes messy input** | Extra spaces, line breaks, quotes, missing `=` padding, URL-safe Base64 |
+| ⚠️ **Honest warnings** | Corrupted or truncated input is partially decoded with clear warnings — never silently altered |
+| 🧱 **Binary detection** | Executables (`MZ`) and other binary data are shown as a hex dump |
+
+## 🛡️ Privacy & Safety
+
+- **100% local** — decoding happens in your browser. No backend, no API, no tracking.
+- **Nothing is uploaded** — a strict Content Security Policy blocks all outgoing connections.
+- **Nothing is executed** — decoded output is always displayed as plain text.
+- **Works offline** — cached after your first visit.
+
+## 🚀 How to Use
+
+1. Open **[mahialjaber.github.io/MiCode](https://mahialjaber.github.io/MiCode/)**
+2. Paste the encoded text or PowerShell command.
+3. Click **Decode** (or press `Ctrl + Enter`).
+4. Check the status: ✅ green = clean · ⚠️ yellow = may be incomplete · ❌ red = could not decode.
+5. **Copy** the result or **Clear** to start again.
+
+## 📁 Project Structure
+
+```text
 MiCode/
-├── index.html          # The single page
-├── css/style.css       # Styling (light and dark mode)
-├── js/decoder.js       # Decoding logic (no DOM, no network)
-├── js/app.js           # Buttons and display
-├── sw.js               # Service worker for offline use
-├── icon.svg            # App icon
-└── tests/              # Automated tests for the decoder (Node.js)
+├── index.html        # The single page
+├── css/style.css     # Styling (light & dark mode)
+├── js/decoder.js     # Decoding logic (no DOM, no network)
+├── js/app.js         # Buttons & display
+├── sw.js             # Offline caching
+└── tests/            # Decoder tests (Node.js)
 ```
 
-## Run locally
+## 💻 Run Locally
 
-No build step is required. Either open `index.html` directly in a browser, or serve the folder (needed for offline caching to work):
+No build step needed — just serve the folder:
 
 ```bash
-npx serve .
-# or
-python -m http.server 8000
+git clone https://github.com/mahialjaber/MiCode.git
+cd MiCode
+python -m http.server 8000      # then open http://localhost:8000
 ```
 
-## Run tests
+Run the tests (Node.js 18+): `node --test tests/decoder.test.js`
 
-Requires [Node.js](https://nodejs.org/) 18 or newer:
+## 📄 License
 
-```bash
-node --test tests/decoder.test.js
-```
-
-## Updating the app
-
-After changing any file, increase `CACHE_VERSION` in `sw.js` (e.g. `micode-v1` → `micode-v2`) so browsers pick up the new version, then push to `main`. GitHub Pages redeploys automatically.
-
-## License
-
-[MIT](LICENSE)
+[MIT](LICENSE) © [Mahi Al Jaber](https://github.com/mahialjaber)

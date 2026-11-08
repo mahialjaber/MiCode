@@ -34,8 +34,8 @@ test('-ExecutionPolicy is not mistaken for -EncodedCommand', async () => {
 });
 
 test('plain UTF-8 Base64', async () => {
-  const r = await decode(utf8b64('Hello, SOC analyst! \u00e9\u00e8 \u2713'));
-  assert.equal(r.output, 'Hello, SOC analyst! \u00e9\u00e8 \u2713');
+  const r = await decode(utf8b64('Hello, security analyst! \u00e9\u00e8 \u2713'));
+  assert.equal(r.output, 'Hello, security analyst! \u00e9\u00e8 \u2713');
   assert.equal(r.warnings.length, 0);
 });
 
