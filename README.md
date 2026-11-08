@@ -35,7 +35,7 @@ Detected: PowerShell -enc argument → Base64 (26 bytes) → UTF-16LE
 
 ## ✨ Features
 
-| | |
+| Feature | What it does |
 |---|---|
 | 🔍 **Smart input** | Paste raw Base64 or a full command line — finds `-e`, `-enc`, `-EncodedCommand`, `FromBase64String('…')` |
 | 🔤 **Auto-detects encoding** | UTF-16LE (PowerShell default), UTF-8 / ASCII, UTF-16BE |
