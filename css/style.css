@@ -1,5 +1,6 @@
-:root {
-  color-scheme: light dark;
+:root,
+html[data-theme="dark"] {
+  color-scheme: dark;
   --bg: #0f1216;
   --surface: #171b21;
   --text: #e3e7ec;
@@ -13,7 +14,7 @@
   --warn-border: #7a6224;
   --err-bg: #2d1414;
   --err-border: #7d3434;
-  --mono: ui-monospace, "Cascadia Mono", Consolas, "SFMono-Regular", Menlo, monospace;
+  --mono: "Cascadia Code", "Cascadia Mono", "Fira Code", ui-monospace, "SFMono-Regular", Consolas, Menlo, monospace;
 }
 
 html[data-theme="light"] {
@@ -33,31 +34,15 @@ html[data-theme="light"] {
   --err-border: #ef9a9a;
 }
 
-html[data-theme="dark"] {
-  color-scheme: dark;
-  --bg: #0f1216;
-  --surface: #171b21;
-  --text: #e3e7ec;
-  --muted: #9aa4b1;
-  --border: #2f3640;
-  --accent: #4c8dff;
-  --accent-text: #0b0d10;
-  --ok-bg: #12261a;
-  --ok-border: #2f6b43;
-  --warn-bg: #2b2310;
-  --warn-border: #7a6224;
-  --err-bg: #2d1414;
-  --err-border: #7d3434;
-}
-
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   transition: background-color 0.25s ease, color 0.25s ease;
+  overflow-x: hidden;
 }
 
 .panel, textarea, button {
@@ -65,31 +50,37 @@ body {
 }
 
 .container {
-  max-width: 960px;
+  max-width: 1040px;
   margin: 0 auto;
-  padding: 24px 16px 40px;
+  padding: 24px 20px 48px;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   position: relative;
 }
 
 .header h1 {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin: 0;
-  font-size: 1.6rem;
-  letter-spacing: -0.01em;
+  font-size: 1.85rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-.tagline { margin: 2px 0 0; color: var(--muted); }
+.tagline {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 1.05rem;
+  font-weight: 500;
+}
 
-/* Pull Cord Lamp Switch Toggle */
+/* Pull Cord Lamp Switch Toggle (Coffee Style) */
 .cord-fixture {
   position: relative;
   display: inline-flex;
@@ -100,19 +91,20 @@ body {
   cursor: grab;
   touch-action: none;
   margin-top: -24px;
+  margin-right: -10px;
   padding: 0 8px;
   z-index: 25;
 }
 .cord-fixture:active { cursor: grabbing; }
 
 .cord-anchor-plate {
-  width: 18px;
+  width: 20px;
   height: 9px;
   border-radius: 0 0 3px 3px;
-  background: linear-gradient(180deg, #475569 0%, #1e293b 100%);
-  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: linear-gradient(180deg, #43281c 0%, #2b170c 100%);
+  border: 1px solid rgba(221, 184, 146, 0.35);
   border-top: none;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 6px rgba(20, 10, 5, 0.6);
   position: relative;
   z-index: 20;
   display: flex;
@@ -127,12 +119,12 @@ body {
   transition: all 0.3s ease;
 }
 .bulb-lit {
-  background-color: #fbbf24;
-  box-shadow: 0 0 8px #f59e0b, 0 0 16px #fbbf24;
+  background-color: #ddb892;
+  box-shadow: 0 0 8px #b08968, 0 0 16px #ddb892;
 }
 .bulb-off {
-  background-color: #38bdf8;
-  box-shadow: 0 0 5px #0284c7;
+  background-color: #6f4e37;
+  box-shadow: 0 0 5px #3f2817;
 }
 
 .cord-interactive-area {
@@ -147,9 +139,9 @@ body {
 .rope-stem {
   width: 2.5px;
   height: 32px;
-  background: linear-gradient(180deg, #94a3b8 0%, #cbd5e1 50%, #fde68a 100%);
+  background: linear-gradient(180deg, #7f5539 0%, #b08968 50%, #e6ccb2 100%);
   transform-origin: top center;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 0 3px rgba(35, 18, 10, 0.6);
   position: relative;
   overflow: hidden;
 }
@@ -157,8 +149,8 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  opacity: 0.4;
-  background: repeating-linear-gradient(45deg, #000 0, #000 1px, transparent 1px, transparent 3px);
+  opacity: 0.45;
+  background: repeating-linear-gradient(45deg, rgba(43, 23, 12, 0.5) 0, rgba(43, 23, 12, 0.5) 1px, transparent 1px, transparent 3px);
 }
 
 .cord-handle {
@@ -175,17 +167,17 @@ body {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: #f59e0b;
-  border: 1px solid #b45309;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  background: #6f4e37;
+  border: 1px solid #43281c;
+  box-shadow: 0 1px 3px rgba(25, 12, 5, 0.4);
 }
 .cord-bead-main {
   width: 12px;
   height: 18px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #d97706 0%, #fef08a 40%, #b45309 100%);
-  border: 1px solid #92400e;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.45);
+  background: linear-gradient(135deg, #3f2314 0%, #6f4e37 38%, #9c6644 68%, #3f2314 100%);
+  border: 1px solid #2b170c;
+  box-shadow: 0 4px 10px rgba(20, 10, 5, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -195,13 +187,14 @@ body {
   width: 4px;
   height: 9px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(246, 235, 224, 0.45);
 }
 .cord-bead-cap {
   width: 6px;
   height: 4px;
   border-radius: 0 0 3px 3px;
-  background: #78350f;
+  background: #2b170c;
+  border: 1px solid #1a0e07;
   margin-top: -1px;
 }
 
@@ -223,15 +216,16 @@ body {
   right: 0;
   margin-top: 10px;
   white-space: nowrap;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: 10px;
-  letter-spacing: 0.05em;
-  background: #0f172a;
-  color: #e2e8f0;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  padding: 5px 9px;
+  border-radius: 5px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  background: #231610;
+  color: #ede0d4;
+  border: 1px solid rgba(221, 184, 146, 0.28);
+  box-shadow: 0 6px 18px rgba(10, 5, 2, 0.7);
   opacity: 0;
   transform: translateY(-4px);
   transition: opacity 0.2s ease, transform 0.2s ease;
@@ -270,28 +264,34 @@ body {
 .panel {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px;
-  margin-bottom: 14px;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
 }
 
 label {
   display: block;
-  font-weight: 600;
-  margin-bottom: 6px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
 }
 
 textarea {
   display: block;
   width: 100%;
-  min-height: 170px;
+  min-height: 175px;
   resize: vertical;
-  padding: 10px 12px;
+  padding: 12px 14px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 9px;
   background: var(--bg);
   color: var(--text);
-  font: 13.5px/1.5 var(--mono);
+  font-family: var(--mono);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.65;
+  letter-spacing: 0.015em;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
@@ -307,19 +307,21 @@ button:focus-visible {
 .actions {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 10px;
+  margin-top: 12px;
 }
 
 button {
   font: inherit;
+  font-size: 14.5px;
   font-weight: 600;
-  padding: 7px 16px;
+  padding: 9px 20px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: var(--surface);
   color: var(--text);
   cursor: pointer;
+  letter-spacing: 0.01em;
 }
 
 button:hover { border-color: var(--muted); }
@@ -332,28 +334,55 @@ button.primary {
 
 button.primary:hover { filter: brightness(1.08); }
 
-.hint { color: var(--muted); font-size: 0.85rem; }
+.hint {
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
 
 .status {
   border: 1px solid var(--ok-border);
   background: var(--ok-bg);
-  border-radius: 10px;
-  padding: 10px 14px;
-  margin-bottom: 14px;
-  font-size: 0.92rem;
+  border-radius: 12px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 0.98rem;
 }
 
 .status.warn { border-color: var(--warn-border); background: var(--warn-bg); }
 .status.error { border-color: var(--err-border); background: var(--err-bg); }
 
-.status strong { display: block; }
-.status .steps { font-family: var(--mono); font-size: 0.85rem; margin-top: 2px; overflow-wrap: anywhere; }
-.status ul { margin: 6px 0 0; padding-left: 20px; }
-.status li { margin: 2px 0; }
+.status strong {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.status .steps {
+  font-family: var(--mono);
+  font-size: 0.92rem;
+  font-weight: 600;
+  margin-top: 4px;
+  letter-spacing: 0.015em;
+  overflow-wrap: anywhere;
+}
+
+.status ul {
+  margin: 8px 0 0;
+  padding-left: 22px;
+  font-size: 0.94rem;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.status li { margin: 3px 0; }
 
 .footer {
   color: var(--muted);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.6;
   text-align: center;
-  margin-top: 20px;
+  max-width: 820px;
+  margin: 28px auto 0;
 }

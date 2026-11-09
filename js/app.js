@@ -239,8 +239,8 @@
 
       if (cue) {
         if (currentStretch >= PULL_THRESHOLD) {
-          cue.style.background = "#fbbf24";
-          cue.style.boxShadow = "0 0 8px #fbbf24";
+          cue.style.background = "#c48b54";
+          cue.style.boxShadow = "0 0 8px #c48b54";
         } else {
           cue.style.background = "transparent";
           cue.style.boxShadow = "none";
