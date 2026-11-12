@@ -3,7 +3,7 @@
  * It only caches MiCode's own files. User input never leaves the page.
  * Bump CACHE_VERSION whenever app files change.
  */
-const CACHE_VERSION = 'micode-v4';
+const CACHE_VERSION = 'micode-v5';
 const APP_FILES = [
   './',
   './index.html',

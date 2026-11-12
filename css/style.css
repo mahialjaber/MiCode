@@ -306,9 +306,42 @@ button:focus-visible {
 
 .actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   margin-top: 12px;
+}
+
+.mode-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg);
+}
+
+.mode-btn {
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 6px 13px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+}
+
+.mode-btn:hover {
+  border-color: transparent;
+  color: var(--text);
+}
+
+.mode-btn.active {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--accent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
 }
 
 button {

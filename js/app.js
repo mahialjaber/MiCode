@@ -13,6 +13,18 @@
   const copyBtn = document.getElementById('copy');
   const clearBtn = document.getElementById('clear');
   const copyMsg = document.getElementById('copy-msg');
+  const modeGroup = document.getElementById('mode-group');
+  const modeBtns = modeGroup ? Array.from(modeGroup.querySelectorAll('.mode-btn')) : [];
+
+  let currentMode = 'auto';
+
+  const PLACEHOLDERS = {
+    auto: 'Paste Base64, PowerShell -enc, Base85, Obfuscated URL, or Hex, e.g.\npowershell.exe -NoP -W Hidden -enc SQBFAFgAIAAoACcAaABlAGwAbABvACcAKQA=',
+    base64: 'Paste Base64 text or a PowerShell command, e.g.\npowershell.exe -NoP -W Hidden -enc SQBFAFgAIAAoACcAaABlAGwAbABvACcAKQA=',
+    base85: 'Paste Ascii85 (<~...~>) or RFC 1924 / Python Base85, e.g.\n<~87cURD]i,"Ebo7~>  or  NM&qnZy;B1a%^NF',
+    url: 'Paste an obfuscated, percent-encoded, defanged, or wrapped URL, e.g.\nhxxps[:]//evil[.]example[.]com/login%3Fuser%3Dadmin',
+    hex: 'Paste hex bytes, 0x values, or \\xNN / \\uNNNN escapes, e.g.\n48 65 6c 6c 6f 20 53 4f 43  or  \\x77\\x68\\x6f\\x61\\x6d\\x69'
+  };
 
   function addList(items) {
     const ul = document.createElement('ul');
@@ -66,11 +78,26 @@
     decodeBtn.disabled = true;
     copyMsg.textContent = '';
     try {
-      const result = await window.MiCodeDecoder.decode(input.value);
+      const result = await window.MiCodeDecoder.decode(input.value, currentMode);
       output.value = result.output;
       showStatus(result);
     } finally {
       decodeBtn.disabled = false;
+    }
+  }
+
+  function setMode(mode) {
+    currentMode = mode;
+    modeBtns.forEach(function (btn) {
+      const isSelected = btn.getAttribute('data-mode') === mode;
+      btn.classList.toggle('active', isSelected);
+      btn.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
+    });
+    if (PLACEHOLDERS[mode]) {
+      input.placeholder = PLACEHOLDERS[mode];
+    }
+    if (input.value.trim() !== '') {
+      runDecode();
     }
   }
 
@@ -103,6 +130,11 @@
   decodeBtn.addEventListener('click', runDecode);
   copyBtn.addEventListener('click', copyOutput);
   clearBtn.addEventListener('click', clearAll);
+  modeBtns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      setMode(btn.getAttribute('data-mode') || 'auto');
+    });
+  });
   input.addEventListener('keydown', function (e) {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();

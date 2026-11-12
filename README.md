@@ -37,8 +37,11 @@ Detected: PowerShell -enc argument → Base64 (26 bytes) → UTF-16LE
 
 | Feature | What it does |
 |---|---|
-| 🔍 **Smart input** | Paste raw Base64 or a full command line — finds `-e`, `-enc`, `-EncodedCommand`, `FromBase64String('…')` |
-| 🔤 **Auto-detects encoding** | UTF-16LE (PowerShell default), UTF-8 / ASCII, UTF-16BE |
+| 🔍 **Smart input & Auto-Detect** | Automatically detects and decodes **Base64 / PowerShell** (`-e`, `-enc`, `FromBase64String`), **Base85**, **Obfuscated URLs**, and **Hex** — or pick a mode manually |
+| 🔢 **Base85 decoding** | Supports both **Ascii85** (`<~…~>` and `z`/`y` shortcuts) and **RFC 1924 / Python Base85** |
+| 🔗 **URL de-obfuscation** | Decodes multi-layer `%XX`, re-fangs `hxxps[:]//` and `[.]`, unwraps **Outlook SafeLinks** & **Proofpoint**, converts **Hex/Dword/Octal IPs**, and flags `@` phishing tricks |
+| 🔣 **Hex & escapes** | Decodes continuous/spaced hex bytes, `0x` arrays, `\xNN` hex escapes, and `\uNNNN` Unicode escapes |
+| 🔤 **Auto-detects text encoding** | UTF-16LE (PowerShell default), UTF-8 / ASCII, UTF-16BE |
 | 🗜️ **Decompresses payloads** | Gzip, Zlib and raw Deflate (PowerShell `GzipStream` / `DeflateStream`) |
 | 🧹 **Fixes messy input** | Extra spaces, line breaks, quotes, missing `=` padding, URL-safe Base64 |
 | ⚠️ **Honest warnings** | Corrupted or truncated input is partially decoded with clear warnings — never silently altered |

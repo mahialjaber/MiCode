@@ -7,8 +7,8 @@
   <meta http-equiv="Content-Security-Policy"
         content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; form-action 'none'; worker-src 'self'; object-src 'none'; base-uri 'none'">
   <meta name="referrer" content="no-referrer">
-  <meta name="description" content="MiCode - offline PowerShell and Base64 decoder. Everything runs locally in your browser.">
-  <title>MiCode - Offline PowerShell &amp; Base64 Decoder</title>
+  <meta name="description" content="MiCode - offline PowerShell, Base64, Base85, URL, and Hex decoder for security analysts. Runs locally in your browser.">
+  <title>MiCode - Offline Security Decoder</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -17,7 +17,7 @@
     <header class="header">
       <div class="header-title">
         <h1><img src="icon.svg" alt="" width="28" height="28"> MiCode</h1>
-        <p class="tagline">Offline PowerShell &amp; Base64 decoder</p>
+        <p class="tagline">Offline PowerShell, Base64, Base85 &amp; URL decoder</p>
       </div>
 
       <!-- Hanging Light Switch Pull Cord -->
@@ -43,9 +43,16 @@
     <section class="panel">
       <label for="input">Input</label>
       <textarea id="input" spellcheck="false" autocomplete="off" autocapitalize="off"
-        placeholder="Paste Base64 text or a PowerShell command, e.g.&#10;powershell.exe -NoP -W Hidden -enc SQBFAFgAIAAoACcAaABlAGwAbABvACcAKQA="></textarea>
+        placeholder="Paste Base64, PowerShell -enc, Base85, Obfuscated URL, or Hex, e.g.&#10;powershell.exe -NoP -W Hidden -enc SQBFAFgAIAAoACcAaABlAGwAbABvACcAKQA="></textarea>
       <div class="actions">
         <button id="decode" type="button" class="primary">Decode</button>
+        <div class="mode-group" id="mode-group" role="group" aria-label="Decoding format">
+          <button type="button" class="mode-btn active" data-mode="auto" aria-pressed="true">Auto-Detect</button>
+          <button type="button" class="mode-btn" data-mode="base64" aria-pressed="false">Base64 / PS</button>
+          <button type="button" class="mode-btn" data-mode="base85" aria-pressed="false">Base85</button>
+          <button type="button" class="mode-btn" data-mode="url" aria-pressed="false">URL</button>
+          <button type="button" class="mode-btn" data-mode="hex" aria-pressed="false">Hex</button>
+        </div>
         <span class="hint">Ctrl + Enter</span>
       </div>
     </section>
