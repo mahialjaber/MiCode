@@ -91,9 +91,12 @@ body {
   cursor: grab;
   touch-action: none;
   margin-top: -24px;
-  margin-right: -10px;
+  margin-right: -42px;
   padding: 0 8px;
   z-index: 25;
+}
+@media (max-width: 1140px) {
+  .cord-fixture { margin-right: -10px; }
 }
 .cord-fixture:active { cursor: grabbing; }
 

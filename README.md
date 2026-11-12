@@ -5,8 +5,8 @@
 <h1 align="center">🔓 MiCode</h1>
 
 <p align="center">
-  <b>A tiny, offline PowerShell &amp; Base64 decoder for security analysts.</b><br>
-  Paste a suspicious command → click <b>Decode</b> → read it safely as plain text.
+  <b>A fast, offline decoder for security analysts — Base64, PowerShell, Base85, Obfuscated URLs &amp; Hex.</b><br>
+  Paste a suspicious string → click <b>Decode</b> → read it safely as plain text.
 </p>
 
 <p align="center">
@@ -23,85 +23,35 @@
 
 ---
 
-## What is MiCode?
+## What It Decodes
 
-Attackers often hide PowerShell commands with Base64 (`powershell -enc SQBFAFgA...`). **MiCode** turns them back into readable text in one click — a lightweight alternative to CyberChef for everyday investigations.
+**MiCode** is a lightweight, zero-clutter alternative to CyberChef built for daily SOC triage and CTF/lab investigations. It **auto-detects** the format or lets you switch modes in one click:
 
-```text
-Input :  powershell.exe -NoP -W Hidden -enc SQBFAFgAIAAoACcAaABlAGwAbABvACcAKQA=
-Output:  IEX ('hello')
-Detected: PowerShell -enc argument → Base64 (26 bytes) → UTF-16LE
-```
-
-## Features
-
-| Feature | What it does |
+| Mode | Capabilities |
 |---|---|
-| 🔍 **Smart input & Auto-Detect** | Automatically detects and decodes **Base64 / PowerShell** (`-e`, `-enc`, `FromBase64String`), **Base85**, **Obfuscated URLs**, and **Hex** — or pick a mode manually |
-| 🔢 **Base85 decoding** | Supports both **Ascii85** (`<~…~>` and `z`/`y` shortcuts) and **RFC 1924 / Python Base85** |
-| 🔗 **URL de-obfuscation** | Decodes multi-layer `%XX`, re-fangs `hxxps[:]//` and `[.]`, unwraps **Outlook SafeLinks** & **Proofpoint**, converts **Hex/Dword/Octal IPs**, and flags `@` phishing tricks |
-| 🔣 **Hex & escapes** | Decodes continuous/spaced hex bytes, `0x` arrays, `\xNN` hex escapes, and `\uNNNN` Unicode escapes |
-| 🔤 **Auto-detects text encoding** | UTF-16LE (PowerShell default), UTF-8 / ASCII, UTF-16BE |
-| 🗜️ **Decompresses payloads** | Gzip, Zlib and raw Deflate (PowerShell `GzipStream` / `DeflateStream`) |
-| 🧹 **Fixes messy input** | Extra spaces, line breaks, quotes, missing `=` padding, URL-safe Base64 |
-| ⚠️ **Honest warnings** | Corrupted or truncated input is partially decoded with clear warnings — never silently altered |
-| 🧱 **Binary detection** | Executables (`MZ`) and other binary data are shown as a hex dump |
+| **Base64 / PS** | Extracts PowerShell `-enc` / `-EncodedCommand` & `FromBase64String()`, decodes UTF-16LE / UTF-8, repairs padding, and auto-decompresses **Gzip / Zlib / Deflate** |
+| **Base85** | Decodes **Adobe Ascii85** (`<~…~>`, `z`/`y` shortcuts) and **RFC 1924 / Python `b85encode`** |
+| **URL** | Re-fangs `hxxps[:]//` & `[.]`, unwraps multi-layer `%XX`, extracts **SafeLinks** & **Proofpoint** targets, resolves **Hex / Dword / Octal IPs**, and flags `@` phishing tricks |
+| **Hex** | Decodes raw/spaced hex dumps, `0x` byte arrays, `\xNN` hex escapes, and `\uNNNN` Unicode escapes |
 
-## 🛡️ Privacy & Safety
+## 🛡️ Security & OPSEC
 
-- **100% local** — decoding happens in your browser. No backend, no API, no tracking.
-- **Nothing is uploaded** — a strict Content Security Policy blocks all outgoing connections.
-- **Nothing is executed** — decoded output is always displayed as plain text.
-- **Works offline** — cached after your first visit.
+- **100% Local & Offline** — Runs entirely in your browser (`connect-src 'none'` CSP). Nothing is ever uploaded or logged.
+- **Never Executed** — Output is rendered strictly as plain text, even when decoding active malicious scripts.
+- **Honest Diagnostics** — Truncated payloads, binary headers (`MZ`), and URL shorteners are flagged clearly with warnings.
 
-## How to Use
-
-1. Open **[mahialjaber.github.io/MiCode](https://mahialjaber.github.io/MiCode/)**
-2. Paste the encoded text or PowerShell command.
-3. Click **Decode** (or press `Ctrl + Enter`).
-4. Check the status: ✅ green = clean · ⚠️ yellow = may be incomplete · ❌ red = could not decode.
-5. **Copy** the result or **Clear** to start again.
-
-## 📁 Project Structure
-
-```text
-MiCode/
-├── index.html        # The single page
-├── css/style.css     # Styling (light & dark mode)
-├── js/decoder.js     # Decoding logic (no DOM, no network)
-├── js/app.js         # Buttons & display
-├── sw.js             # Offline caching
-└── tests/            # Decoder tests (Node.js)
-```
-
-## Run Locally
-
-No build step needed — just serve the folder:
+## 🚀 Run Locally
 
 ```bash
 git clone https://github.com/mahialjaber/MiCode.git
 cd MiCode
-python -m http.server 8000      # then open http://localhost:8000
+python -m http.server 8000   # open http://localhost:8000
 ```
 
-Run the tests (Node.js 18+): `node --test tests/decoder.test.js`
+## ⭐ Support
 
-## 📄 License
-
-[MIT](LICENSE) © [Mahi Al Jaber](https://github.com/mahialjaber)
-
-## ⭐ Support This Project
-
-If this tool helped with your studies, certifications, or lab setup:
-
-- ⭐ **Star this repository** so it reaches other analysts who need it
-- 👤 **Follow [@mahialjaber](https://github.com/mahialjaber)** for future defensive security projects and SOC tooling
-- 🍴 **Fork it and share what you build**
-
-Building resources like this for the community takes time — every star genuinely helps it reach the next analyst who needs it.
-
----
+If **MiCode** helps in your SOC workflow or labs, **star this repository** and follow **[@mahialjaber](https://github.com/mahialjaber)**.
 
 <p align="center">
-  Built for the blue team. 🛡️
+  <sub><a href="LICENSE">MIT License</a> © <a href="https://github.com/mahialjaber">Mahi Al Jaber</a> · Built for the blue team 🛡️</sub>
 </p>
