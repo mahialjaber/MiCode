@@ -40,7 +40,7 @@
 - **Never Executed** — Output is rendered strictly as plain text, even when decoding active malicious scripts.
 - **Honest Diagnostics** — Truncated payloads, binary headers (`MZ`), and URL shorteners are flagged clearly with warnings.
 
-## 🚀 Run Locally
+## Run Locally
 
 ```bash
 git clone https://github.com/mahialjaber/MiCode.git
