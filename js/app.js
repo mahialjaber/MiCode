@@ -1,5 +1,5 @@
 /*
- * MiCode user interface.
+ * Decodora user interface.
  * Output is only ever written with .value / .textContent (never innerHTML),
  * so decoded content can never run as code in the page.
  */
@@ -78,7 +78,7 @@
     decodeBtn.disabled = true;
     copyMsg.textContent = '';
     try {
-      const result = await window.MiCodeDecoder.decode(input.value, currentMode);
+      const result = await window.DecodoraDecoder.decode(input.value, currentMode);
       output.value = result.output;
       showStatus(result);
     } finally {
@@ -157,14 +157,14 @@
     // Default to dark theme or saved preference
     let currentTheme = 'dark';
     try {
-      const saved = localStorage.getItem("micode-theme");
+      const saved = localStorage.getItem("decodora-theme");
       if (saved) currentTheme = saved;
     } catch (e) {}
 
     function applyTheme(theme) {
       document.documentElement.setAttribute("data-theme", theme);
       try {
-        localStorage.setItem("micode-theme", theme);
+        localStorage.setItem("decodora-theme", theme);
       } catch (e) {}
 
       const isDark = theme === "dark";

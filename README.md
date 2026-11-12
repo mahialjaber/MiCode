@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/banner.jpg" alt="MiCode banner" width="100%">
+  <img src="assets/banner.jpg" alt="Decodora banner" width="100%">
 </p>
 
-<h1 align="center">🔓 MiCode</h1>
+<h1 align="center">🔓 Decodora</h1>
 
 <p align="center">
   <b>A fast, offline decoder for security analysts — Base64, PowerShell, Base85, Obfuscated URLs &amp; Hex.</b><br>
@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <a href="https://mahialjaber.github.io/MiCode/"><img src="https://img.shields.io/badge/LIVE%20DEMO-Open%20MiCode-1f6feb?style=for-the-badge" alt="Live demo"></a>
+  <a href="https://mahialjaber.github.io/Decodora/"><img src="https://img.shields.io/badge/LIVE%20DEMO-Open%20Decodora-1f6feb?style=for-the-badge" alt="Live demo"></a>
 </p>
 
 <p align="center">
@@ -25,7 +25,7 @@
 
 ## What It Decodes
 
-**MiCode** is a lightweight, zero-clutter alternative to CyberChef built for daily SOC triage and CTF/lab investigations. It **auto-detects** the format or lets you switch modes in one click:
+**Decodora** is a lightweight, zero-clutter alternative to CyberChef built for daily SOC triage and CTF/lab investigations. It **auto-detects** the format or lets you switch modes in one click:
 
 | Mode | Capabilities |
 |---|---|
@@ -43,14 +43,14 @@
 ## Run Locally
 
 ```bash
-git clone https://github.com/mahialjaber/MiCode.git
-cd MiCode
+git clone https://github.com/mahialjaber/Decodora.git
+cd Decodora
 python -m http.server 8000   # open http://localhost:8000
 ```
 
 ## ⭐ Support
 
-If **MiCode** helps in your SOC workflow or labs, **star this repository** and follow **[@mahialjaber](https://github.com/mahialjaber)**.
+If **Decodora** helps in your SOC workflow or labs, **star this repository** and follow **[@mahialjaber](https://github.com/mahialjaber)**.
 
 <p align="center">
   <sub><a href="LICENSE">MIT License</a> © <a href="https://github.com/mahialjaber">Mahi Al Jaber</a> · Built for the blue team 🛡️</sub>

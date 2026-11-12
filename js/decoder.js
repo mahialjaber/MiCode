@@ -1,8 +1,8 @@
 /*
- * MiCode decoder core.
+ * Decodora decoder core.
  *
  * Pure decoding logic with no DOM access and no network access.
- * Works in the browser (exposed as window.MiCodeDecoder) and in Node.js
+ * Works in the browser (exposed as window.DecodoraDecoder) and in Node.js
  * (module.exports) so it can be tested from the command line.
  *
  * Supported modes:
@@ -862,7 +862,7 @@
       const baseHost = hostLower.replace(/^www\./, '');
       if (SHORTENER_DOMAINS.has(baseHost)) {
         ctx.steps.push('Shortened URL (' + baseHost + ')');
-        ctx.warnings.push('Shortened URL detected (' + baseHost + '). Because MiCode runs 100% offline to protect your OPSEC, it never connects to external servers to follow live redirects. Inspect this link in an isolated sandbox or URL-expander service.');
+        ctx.warnings.push('Shortened URL detected (' + baseHost + '). Because Decodora runs 100% offline to protect your OPSEC, it never connects to external servers to follow live redirects. Inspect this link in an isolated sandbox or URL-expander service.');
         changed = true;
       }
     } catch (e) {
@@ -1087,5 +1087,5 @@
 
   const api = { decode: decode };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
-  root.MiCodeDecoder = api;
+  root.DecodoraDecoder = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

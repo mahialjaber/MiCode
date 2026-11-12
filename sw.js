@@ -1,9 +1,9 @@
 /*
- * MiCode service worker: makes the app work offline.
- * It only caches MiCode's own files. User input never leaves the page.
+ * Decodora service worker: makes the app work offline.
+ * It only caches Decodora's own files. User input never leaves the page.
  * Bump CACHE_VERSION whenever app files change.
  */
-const CACHE_VERSION = 'micode-v6';
+const CACHE_VERSION = 'decodora-v1';
 const APP_FILES = [
   './',
   './index.html',
